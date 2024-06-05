@@ -18,7 +18,7 @@ php bin/console d:f:l
 ```
 
 
-Si docker est installé localement: http://localhost:10290 devrait lancer l'application
+Si docker est installé localement: http://localhost:10290/admin devrait lancer l'application
 
 ## Accès
 
