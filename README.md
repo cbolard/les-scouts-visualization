@@ -20,6 +20,10 @@ php bin/console d:f:l
 
 Si docker est installé localement: http://localhost:10290 devrait lancer l'application
 
+## Accès
+
+http://localhost:10290/admin
+
 ## Consignes de l'exercice:
 
 Voici une application qui présente la liste des membres de la fédération.
@@ -40,7 +44,8 @@ Laisse parler ta créativité et montre nous ce que tu sais faire ;)
 > Les membres (WsMembre) sont regroupés en sections (WsSection), chaque section appartient à une unité (WsUnite), chaque unité appartient à un groupe d'unité (WsGroupeUnite), et chaque groupe d'unité appartient à une Fédération (WsFederation).
 > 
 > Ce qui intéresse le client c'est d'avoir une vue sur ces différents éléments (tableaux, graphiques, ...)
-> 
+>
+
 ## Approche et Méthodologie
 
 Pour répondre à la demande du client et créer un tableau de bord visuellement attrayant, voici la méthode que j'ai suivie :
