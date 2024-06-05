@@ -1,0 +1,126 @@
+{% block content %}
+<canvas id="chart_group_unite"></canvas>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="/js/common.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const ctx = document.getElementById('chart_group_unite').getContext('2d');
+
+        const initialColors = [
+            'rgba(203, 67, 53, 1)',  // Rouge
+            'rgba(31, 97, 141, 1)',  // Bleu
+            'rgba(241, 196, 15, 1)', // Jaune
+            'rgba(39, 174, 96, 1)',  // Vert
+            'rgba(136, 78, 160, 1)', // Violet
+            'rgba(211, 84, 0, 1)',   // Orange
+            'rgba(52, 152, 219, 1)', // Bleu clair
+            'rgba(46, 204, 113, 1)', // Vert clair
+            'rgba(155, 89, 182, 1)', // Violet clair
+            'rgba(230, 126, 34, 1)', // Orange clair
+            'rgba(52, 73, 94, 1)',   // Gris
+            'rgba(189, 195, 199, 1)' // Gris clair
+        ];
+
+        const transparentColors = initialColors.map(color => color.replace(', 1)', ', 0.2)'));
+
+        const labels = {{ labels|json_encode|raw }};
+        const data = {{ data|json_encode|raw }};
+
+        const counts = data.map(item => item.count);
+        const groupIds = data.map(item => item.id);
+
+        const chartConfig = {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Nombre d\'unités par groupe',
+                    data: counts,
+                    backgroundColor: [...initialColors],
+                    borderColor: [...initialColors],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: {
+                                size: 14,
+                            }
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Nombre d\'unités par groupe'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                label = ' Nombre d\'unités : ' + context.raw;
+                                return label;
+                            }
+                        }
+                    }
+                },
+                onClick: (event, elements) => {
+                    if (elements.length > 0) {
+                        const clickedElementIndex = elements[0].index;
+                        const groupId = groupIds[clickedElementIndex];
+                        fetchUnitesForGroup(groupId); 
+                        resetMembersList(); 
+                        resetChartSection(); 
+                        resetChartUnite(); 
+                        ChartHelpers.highlightSegment(chartGroupUnite, clickedElementIndex, initialColors, transparentColors);
+                    }
+                }
+            }
+        };
+
+        const chartGroupUnite = new Chart(ctx, chartConfig);
+
+        window.updateChartGroupUnite = function(groupUnitesData) {
+            ChartHelpers.updateChart(chartGroupUnite, groupUnitesData, initialColors);
+        }
+
+        window.resetChartGroupUnite = function() {
+            ChartHelpers.resetChart(chartGroupUnite, initialColors);
+        }
+
+        function resetChartUnite() {
+            // Fonction pour réinitialiser les couleurs des unités
+            const chartUniteCtx = document.getElementById('chart_unite').getContext('2d');
+            const chartUnite = Chart.getChart(chartUniteCtx); // Récupérer l'instance du graphique des unités
+            if (chartUnite) {
+                ChartHelpers.resetChart(chartUnite, initialColors);
+            }
+        }
+
+        function resetChartSection() {
+            // Fonction pour réinitialiser les couleurs des sections
+            const chartSectionCtx = document.getElementById('chart_section').getContext('2d');
+            const chartSection = Chart.getChart(chartSectionCtx); // Récupérer l'instance du graphique des sections
+            if (chartSection) {
+                ChartHelpers.resetChart(chartSection, initialColors);
+            }
+        }
+
+        function fetchUnitesForGroup(groupId) {
+            axios.get(`/admin/get-unite/${groupId}`)
+                .then(response => {
+                    updateChartUnite(response.data);
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        }
+    });
+</script>
+{% endblock %}

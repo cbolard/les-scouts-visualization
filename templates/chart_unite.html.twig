@@ -1,0 +1,98 @@
+{% block content %}
+<canvas id="chart_unite"></canvas>
+<script src="/js/common.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const ctx = document.getElementById('chart_unite').getContext('2d');
+        
+        const initialColors = [
+                'rgba(203, 67, 53, 1)',  // Rouge
+                'rgba(31, 97, 141, 1)',  // Bleu
+                'rgba(241, 196, 15, 1)', // Jaune
+                'rgba(39, 174, 96, 1)',  // Vert
+                'rgba(136, 78, 160, 1)', // Violet
+                'rgba(211, 84, 0, 1)',    // Orange
+                'rgba(52, 152, 219, 1)', // Bleu clair
+                'rgba(46, 204, 113, 1)', // Vert clair
+                'rgba(155, 89, 182, 1)', // Violet clair
+                'rgba(230, 126, 34, 1)', // Orange clair
+                'rgba(52, 73, 94, 1)',   // Gris
+                'rgba(189, 195, 199, 1)' // Gris clair
+        ];
+
+        const transparentColors = initialColors.map(color => color.replace(', 1)', ', 0.2)'));
+
+        const initialData = {
+            labels: [],
+            datasets: [{
+                data: [],
+                backgroundColor: [...initialColors],
+                borderColor: [...initialColors],
+                borderWidth: 1
+            }]
+        };
+
+        const chartConfig = {
+            type: 'bar',
+            data: initialData,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    title: {
+                        display: true,
+                        text: 'Nombre de membres par unité'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.raw !== null) {
+                                    label += context.raw;
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                },
+                onClick: (event, elements) => {
+                    if (elements.length > 0) {
+                        const clickedElementIndex = elements[0].index;
+                        const uniteId = chartUnite.data.labels[clickedElementIndex];
+                        fetchSectionsForUnite(uniteId);
+                        resetMembersList(); 
+                        ChartHelpers.highlightSegment(chartUnite, clickedElementIndex, initialColors, transparentColors);
+
+                    }
+                }
+            }
+        };
+
+        const chartUnite = new Chart(ctx, chartConfig);
+
+        window.updateChartUnite = function(unitesData) {
+            ChartHelpers.updateChart(chartUnite, unitesData, initialColors);
+        }
+
+        window.resetChartUnite = function() {
+            ChartHelpers.resetChart(chartUnite, initialColors);
+        }
+
+        function fetchSectionsForUnite(uniteName) {
+            axios.get(`/admin/get-section/${uniteName}`)
+                .then(response => {
+                    updateChartSection(response.data);
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        }
+
+    });
+</script>
+{% endblock %}

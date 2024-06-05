@@ -1,0 +1,51 @@
+{% extends '@EasyAdmin/layout.html.twig' %}
+
+
+{% block main %}
+
+<div class="container">
+        <h2 class="text-center mb-4">Tableau de bord</h2>
+        <div class="row">
+            <div class="col-lg-6 col-md-12 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        {{ include('chart_group_unite.html.twig', {
+                            'labels' : labels,
+                            'data' : data,
+                        }) }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-12 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        {{ include('chart_unite.html.twig', {
+                            'labels' : labels,
+                            'data' : data,
+                        }) }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-12 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        {{ include('chart_section.html.twig', {
+                            'labels' : labels,
+                            'data' : data,
+                        }) }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-12 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        {{ include('members_list.html.twig') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+

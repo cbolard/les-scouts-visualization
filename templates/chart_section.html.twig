@@ -1,0 +1,114 @@
+{% block content %}
+<canvas id="chart_section"></canvas>
+<script src="/js/common.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const ctx = document.getElementById('chart_section').getContext('2d');
+
+        const initialColors = [
+        'rgba(203, 67, 53, 1)',  // Rouge
+                'rgba(31, 97, 141, 1)',  // Bleu
+                'rgba(241, 196, 15, 1)', // Jaune
+                'rgba(39, 174, 96, 1)',  // Vert
+                'rgba(136, 78, 160, 1)', // Violet
+                'rgba(211, 84, 0, 1)',    // Orange
+                'rgba(52, 152, 219, 1)', // Bleu clair
+                'rgba(46, 204, 113, 1)', // Vert clair
+                'rgba(155, 89, 182, 1)', // Violet clair
+                'rgba(230, 126, 34, 1)', // Orange clair
+                'rgba(52, 73, 94, 1)',   // Gris
+                'rgba(189, 195, 199, 1)' // Gris clair
+        ];
+
+        const transparentColors = initialColors.map(color => color.replace(', 1)', ', 0.2)'));
+
+        const initialData = {
+            labels: [],
+            datasets: [{
+                label: 'Nombre de membres par section',
+                data: [],
+                backgroundColor: [...initialColors],
+                borderColor: [...initialColors],
+                borderWidth: 1
+            }]
+        };
+
+        const config = {
+            type: 'polarArea',
+            data: initialData,
+            options: {
+                responsive: true,
+                scales: {
+                    r: {
+                        pointLabels: {
+                            display: true,
+                            centerPointLabels: true,
+                            font: {
+                                size: 18
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Nombre de membres par section'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                label += ' Nombre de membres : ' + context.raw;
+                                return label;
+                            }
+                        }
+                    }
+                },
+                
+                onClick: (event, elements) => {
+                    if (elements.length > 0) {
+                        const clickedElementIndex = elements[0].index;
+                        const sectionName = chartSection.data.labels[clickedElementIndex];
+                        const sectionId = sectionNameToId[sectionName]; // Utiliser le mapping pour obtenir l'ID
+                        fetchMembersForSection(sectionId);
+                        ChartHelpers.highlightSegment(chartSection, clickedElementIndex, initialColors, transparentColors);
+                    }
+                }
+            },
+        };
+
+        const chartSection = new Chart(ctx, config);
+
+        const sectionNameToId = {}; 
+
+        window.updateChartSection = function(sectionData) {
+            ChartHelpers.updateChart(chartSection, sectionData, initialColors);
+            sectionData.forEach(section => {
+                sectionNameToId[section.name] = section.id;
+            });
+        }
+
+        window.resetChartSection = function() {
+            ChartHelpers.resetChart(chartSection, initialColors);
+        }
+        
+        function fetchMembersForSection(sectionId) {
+            axios.get(`/admin/get-members/${sectionId}`)
+                .then(response => {
+                    updateMembersList(response.data);
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        }
+
+ 
+    });
+</script>
+{% endblock %}

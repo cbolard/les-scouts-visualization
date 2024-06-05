@@ -1,0 +1,47 @@
+{% block content %}
+<div>
+    <h6 style="margin:auto; text-align:center">Liste des membres</h6>
+    <table id="members_table" class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+<script>
+    window.updateMembersList = function(membersData) {
+        const tbody = document.querySelector('#members_table tbody');
+        tbody.innerHTML = ''; // On vide le contenu du tableau
+
+        membersData.forEach(member => {
+            const row = document.createElement('tr');
+
+
+            const lastNameCell = document.createElement('td');
+            lastNameCell.textContent = member.lastName;
+            row.appendChild(lastNameCell);
+
+            const firstNameCell = document.createElement('td');
+            firstNameCell.textContent = member.firstName;
+            row.appendChild(firstNameCell);
+
+            const emailCell = document.createElement('td');
+            emailCell.textContent = member.email;
+            row.appendChild(emailCell);
+
+
+            tbody.appendChild(row);
+        });
+    }
+
+     window.resetMembersList = function() {
+        const tbody = document.querySelector('#members_table tbody');
+        tbody.innerHTML = ''; 
+    }
+</script>
+{% endblock %}
