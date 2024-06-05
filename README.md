@@ -40,6 +40,39 @@ Laisse parler ta créativité et montre nous ce que tu sais faire ;)
 > Les membres (WsMembre) sont regroupés en sections (WsSection), chaque section appartient à une unité (WsUnite), chaque unité appartient à un groupe d'unité (WsGroupeUnite), et chaque groupe d'unité appartient à une Fédération (WsFederation).
 > 
 > Ce qui intéresse le client c'est d'avoir une vue sur ces différents éléments (tableaux, graphiques, ...)
+> 
+## Approche et Méthodologie
+
+Pour répondre à la demande du client et créer un tableau de bord visuellement attrayant, voici la méthode que j'ai suivie :
+
+### Bibliothèques utilisées :
+
+- **EasyAdmin 4** : Une bibliothèque qui permet de créer des interface d'administration sur Symfony.
+- **ChartJs** : Une bibliothèque JavaScript utilisée pour créer des graphiques dynamiques et interactifs.
+- **Bootstrap** : Un framework CSS pour garantir que l'application soit responsive.
+- **Axios** : Utilisé pour récupérer les données dynamiques et les mettre à jour en temps réel sans recharger la page.
+
+### Étapes suivies :
+
+1. **Création du tableau de bord (Dashboard)** :
+   - Implémentation de l'interactivité dans les graphiques pour permettre aux utilisateurs de cliquer sur des segments et d'afficher des informations détaillées.
+   - Le premier graphique permet de visualiser tous les groupes d'unités.
+   - Le deuxième graphique permet de visualiser le nombre de membres par unité dans un groupe d'unité spécifique.
+   - Le troisième graphique permet de visualiser le nombre de membres par section dans une unité spécifique.
+
+2. **Création de l'interface d'administration avec EasyAdmin** :
+   - Création de l'outil de recherche, qui permet grâce à une barre de recherche de trouver rapidement un membre
+   - Recherche d'un membre en fonction de ses informations personnelles ou de son appartenance au sein des Scouts.
+
+### Résultat :
+
+Le tableau de bord final offre une vue d'ensemble des données de la fédération avec des graphiques interactifs et des informations détaillées. 
+
+- La partie Dashboard permet de visualiser les données chiffrées pour voir rapidement quels sont les différents groupes d'unités, unités, sections et membres qui les composent.
+  
+- La partie Recherche met l'accent sur l'accès rapide aux informations d'un membre en fonction de son nom, prénom, mail, mais aussi sa section, son unité ou son groupe d'unité.
+
+Durant ce projet, mon objectif a été d'utiliser des bibliothèques pertinentes et modernes pour créer une interface utilisateur intuitive, en appliquant les bonnes pratiques de développement web.
 
 
 
